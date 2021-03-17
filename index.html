@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ethereum EIP712 Signature 2021</title>
+    <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+    <!--
+      === NOTA BENE ===
+      For the three scripts below, if your spec resides on dev.w3 you can check them
+      out in the same tree and use relative links so that they'll work offline,
+     -->
+    <script src='//www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
+    <script type="text/javascript" class="remove">
+      var respecConfig = {
+        // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+        specStatus:           "DRAFT",
+
+        // the specification's short name, as in http://www.w3.org/TR/short-name/
+        shortName:            "lds-ethereum-eip712-2021",
+
+        // if you wish the publication date to be other than today, set this
+        // publishDate:  "2009-08-06",
+
+        // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
+        // and its maturity status
+        // previousPublishDate:  "1977-03-15",
+        // previousMaturity:  "WD",
+
+        // if there a publicly available Editor's Draft, this is the link
+        edDraftURI:           "TBD",
+
+        // if this is a LCWD, uncomment and set the end of its review period
+        // lcEnd: "2009-08-05",
+
+        // if you want to have extra CSS, append them to this list
+        // it is recommended that the respec.css stylesheet be kept
+        //extraCSS:             ["spec.css", "prettify.css"],
+
+        // editors, add as many as you like
+        // only "name" is required
+        editors:  [
+          { 
+            name: "Oliver Terbu", url: "https://www.linkedin.com/in/oliver-terbu/",
+            company: "ConsenSys Mesh", companyURL: "https://mesh.xyz/" 
+          },
+          { 
+            name: "Charles E. Lehner", url: "https://www.linkedin.com/in/celehner/",
+            company: "Spruce", companyURL: "https://spruceid.com/" 
+          },
+          { 
+            name: "Wayne Chang", url: "https://www.linkedin.com/in/waynebuilds/",
+            company: "Spruce", companyURL: "https://spruceid.com/" 
+          }
+        ],
+
+        // authors, add as many as you like.
+        // This is optional, uncomment if you have authors as well as editors.
+        // only "name" is required. Same format as editors.
+
+        authors:  [
+          { 
+            name: "Oliver Terbu", url: "https://www.linkedin.com/in/oliver-terbu/",
+            company: "ConsenSys Mesh", companyURL: "https://mesh.xyz/" 
+          },
+          { 
+            name: "Charles E. Lehner", url: "https://www.linkedin.com/in/celehner/",
+            company: "Spruce", companyURL: "https://spruceid.com/" 
+          },
+          { 
+            name: "Wayne Chang", url: "https://www.linkedin.com/in/waynebuilds/",
+            company: "Spruce", companyURL: "https://spruceid.com/" 
+          }
+        ],
+
+        // extend the bibliography entries
+        //localBiblio: webpayments.localBiblio,
+
+        // name of the WG
+        wg:           "W3C Digital Verification Community Group",
+
+        // URI of the public WG page
+        wgURI:        "https://www.w3.org/community/digital-verification/",
+
+        // name (with the @w3c.org) of the public mailing to which comments are due
+        wgPublicList: "public-digital-verification",
+
+        // URI of the patent status for this WG, for Rec-track documents
+        // !!!! IMPORTANT !!!!
+        // This is important for Rec-track documents, do not copy a patent URI from a random
+        // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+        // Team Contact.
+        wgPatentURI:  "",
+        maxTocLevel: 4,
+        /*preProcess: [ webpayments.preProcess ],
+        alternateFormats: [ {uri: "diff-20111214.html", label: "diff to previous version"} ],
+        */
+        otherLinks: [{
+          key: "Source control",
+          data: [{
+            value: "https://github.com/w3c-dvcg/lds-ed25519-2018/",
+            href: "https://github.com/w3c-dvcg/lds-ed25519-2018/"
+          }]
+        }, {
+          key: "Issue Tracker",
+          data: [{
+            value: "https://github.com/w3c-dvcg/lds-ed25519-2018/issues/",
+            href: "https://github.com/w3c-dvcg/lds-ed25519-2018/issues/"
+          }]
+        }],
+        localBiblio:  {
+          "SECURITY-VOCABULARY": {
+            title:    "Security Linked Data Vocabulary",
+            href:     "https://web-payments.org/vocabs/security",
+            authors:  ["Manu Sporny","David Longley"],
+            status:   "CG-DRAFT",
+            publisher:  "Web Payments Community Group"
+          },
+          "LD-SIGNATURES": {
+            title:    "Linked Data Signatures 1.0",
+            href:     "https://web-payments.org/specs/source/ld-signatures/",
+            authors:  ["David Longley", "Manu Sporny"],
+            status:   "CG-DRAFT",
+            publisher:  "Web Payments Community Group"
+          },
+          "EIP712": {
+            title:    "EIP-712: Ethereum typed structured data hashing and signing",
+            href:     "https://eips.ethereum.org/EIPS/eip-712",
+            authors: [ "Remco Bloemen", "Leonid Logvinov", "Jacob Evans" ],
+          },
+          "JCS": {
+            title:    "JSON Canonicalization Scheme (JCS)",
+            href:     "https://tools.ietf.org/html/rfc8785",
+            authors: [ "A. Rundgren", "B. Jordan", "S. Erdtman" ],
+          },
+          "LDS-ECDSAK1": {
+            title: "Ecdsa Secp256k1 Signature 2019",
+            href: "https://w3c-ccg.github.io/lds-ecdsa-secp256k1-2019/",
+            authors: [ "Orie Steele" ]            
+          }
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <section id='abstract'>
+      <p>
+This specification describes a standard signature suite created in 2021 for the
+ECDSA signature scheme using secp256k1, used e.g. by Ethereum, to allow Ethereum 
+Web3 Providers and Wallets to generate those signatures that can be verified in
+Smart Contracts and completely offchain.
+      </p>
+    </section>
+
+    <section id='sotd'>
+      <p>
+This is an experimental specification and is undergoing regular revisions. It
+is not fit for production deployment.
+      </p>
+    </section>
+
+    <section>
+      <h2>Introduction</h2>
+      <p>
+This specification describes a standard signature suite created in 2021 for the
+Linked Data Signatures [[LD-SIGNATURES]] specification. It uses the JCS
+[[JCS]] to transform the input document into its canonical form. 
+It uses Keccak-256 [[TBD]] as the <a>message digest algorithm</a> and ECDSA [[SECP256K1]]
+as the <a>signature algorithm</a>. The signatures can be generated using standard Web3 Providers
+through <code>eth_signTypedData</code> defined in EIP712. Computed signatures
+require input data using a specific JSON schema. The output can be verified in 
+a smart contract or completely offchain. 
+      </p>
+    </section>
+
+    <section>
+      <h2>Terminology</h2>
+      <p>
+The following terms are used to describe concepts involved in the
+generation and verification of the Ethereum EIP712 2021
+<a>signature suite</a>.
+      </p>
+
+      <dl>
+        <dt><dfn>signature suite</dfn></dt>
+        <dd>
+A specified set of cryptographic primitives typically consisting of
+a canonicalization algorithm, a message digest algorithm, and a signature
+algorithm that are bundled together by cryptographers for developers
+for the purposes of safety and convenience.
+        </dd>
+        <dt><dfn>canonicalization algorithm</dfn></dt>
+        <dd>
+An algorithm that takes an input document that has more than one possible
+representation and always transforms it into a canonical form. This process is
+sometimes also called normalization.
+        </dd>
+        <dt><dfn>message digest algorithm</dfn></dt>
+        <dd>
+An algorithm that takes an input message and produces a cryptographic
+output message that is often many orders of magnitude smaller than the
+input message. These algorithms are often 1) very fast, 2)
+non-reversible, 3) cause the output to change significantly when even one
+bit of the input message changes, and 4) make it infeasible to find two
+different inputs for the same output.
+        </dd>
+        <dt><dfn>signature algorithm</dfn></dt>
+        <dd>
+An algorithm that takes an input message and produces an output value where the
+receiver of the message can mathematically verify that the message has not
+been modified in transit and came from someone possessing a particular secret.
+        </dd>
+      </dl>
+
+    </section>
+
+
+    <section>
+      <h2>Key Format</h2>
+      <p>
+        This specification does not introduce a new key format. The key format
+        used in this specification uses <code>EcdsaSecp256k1VerificationKey2019</code>
+        defined in Ecdsa Secp256k1 Signature 2019 [[LDS-ECDSAK1]].
+      </p>
+
+	<section>
+      <h2>Examples</h2>
+
+      <p>
+        A simple example of an Ecdsa Secp256k1 2019 Signature Verification Key
+        that can be used with Ethereum EIP712 2021 Signatures: 
+
+      </p>
+
+      <pre class="example highlight">
+{
+  "@context": ["https://w3id.org/security/v1"],
+  "id": "did:example:123456789abcdefghi#keys-1",
+  "type": "EcdsaSecp256k1VerificationKey2019",
+  "controller": "did:example:123456789abcdefghi",
+  "expires": "2017-02-08T16:02:20Z",
+  "publicKeyHex" : "034ee0f670fc96bb75e8b89c068a1665007a41c98513d6a911b6137e2d16f1d300"
+}
+      </pre>
+
+      <p>
+        Note: The <code>publicKeyHex</code> property contains the raw public
+         key bytes.
+      </p>
+    </section>
+    </section>
+
+
+    <section>
+      <h2>The Ethereum EIP712 2021 Signature Suite</h2>
+
+      <p>
+The Ethereum EIP712 2021 <a>signature suite</a> MUST be used in
+conjunction with the signing and verification algorithms in the
+Linked Data Signatures [[LD-SIGNATURES]] specification. The suite
+consists of the following algorithms:
+      </p>
+
+      <table class="simple">
+        <thead>
+          <th>Parameter</th>
+          <th>Value</th>
+          <th>Specification</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>canonicalizationAlgorithm</td>
+            <td>EIP712 + http://>???#JCS</td>
+            <td>[[JCS]]</td>
+          </tr>
+          <tr>
+            <td>digestAlgorithm</td>
+            <td>http://>???#keccak-256</td>
+            <td>TBD:</td>
+          </tr>
+          <tr>
+            <td>signatureAlgorithm</td>
+            <td>TBD: link to RLP ETH sig</td>
+            <td>TBD:</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    <section>
+      <h2>Modification to Algorithms</h2>
+
+      <p>
+        TBD: 
+
+        <ul>
+          <li>
+              To compute the signature over the input object,
+              an additional EIP712 schema is required. Canonicalization requires
+              the transformation of the input document to a canonical EIP712 compliant
+              JSON object.            
+            </li>
+          <li>
+              To verify the signature, an additional EIP712 schema is required and requires
+              to inverse the canonical transformation alrogithm.</li>
+          </li>
+        </ul>
+      </p>
+    </section>
+
+    <section>
+      <h2>Security Considerations</h2>
+      <p>
+The following section describes security considerations that developers
+implementing this specification should be aware of in order to create secure
+software.
+      </p>
+
+<div class="issue">TODO: We need to add a complete list of security
+considerations.</div>
+    </section>
+
+    <section class="appendix">
+      <h2>Examples</h2>
+
+      <p>
+A simple example of a Ethereum EIP712 2021 Signature:
+      </p>
+
+      <pre class="example highlight">
+{
+  "@context": ["http://schema.org/", "https://w3id.org/security/v2"],
+  "description": "Hello world!",
+  "credentialSchema": {
+    "id": "https://my.example.com/schemas/eip712.json",
+    "type": "EthereumEip712SchemaValidation"
+  },
+  "proof": {
+    "type": "EthereumEip712Signature2021",
+    "created": "2016-10-23T05:50:16Z",
+    "verificationMethod": "did:example:123456789abcdefghi#key1",
+    "proofPurpose": "assertionMethod",
+    "jws" : "TBD.TBD"
+  }
+}
+      </pre>
+    </section>
+  </body>
+</html>
