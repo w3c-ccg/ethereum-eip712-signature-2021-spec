@@ -279,22 +279,6 @@
         <dt>
           <dfn data-lt="linked data proof|linked data proofs">linked data proof</dfn>
         </dt>
-        <dd>
-          A
-          <a
-            href="https://w3c-ccg.github.io/ld-proofs/#dfn-linked-data-proof"
-            class="externalDFN"
-            >linked data proof</a
-          >
-          which is a set of attributes that represent a linked data digital
-          proof and the parameters required to verify it as defined by
-          [[RDF-N-Quads]].
-        </dd>
-        <dt><dfn>linked data proof document</dfn></dt>
-        <dd>
-          A <a>linked data document</a> featuring one or more
-          <a>linked data proofs</a>.
-        </dd>
 
         <dt><dfn>EcdsaSecp256k1VerificationKey2019</dfn></dt>
         <dd>
@@ -416,6 +400,11 @@
             <code>EcdsaSecp256k1VerificationKey2019</code> or <code>EcdsaSecp256k1RecoveryMethod2020</code>.
           </p>
 
+          <div class="issue">
+            TODO: We need to discuss if the <code>proof</code> property meta-data should
+            also go into the EIP712 signature function.
+          </div>
+    
           <p>
             The <code>type</code> property of the proof MUST be <code>EthereumEip712Signature2021</code>.
           </p>            
@@ -678,11 +667,6 @@
       <div class="issue">
         TODO: We need to add a complete list of security considerations, e.g., 
         what happens if EIP712 JSON schema does not match the message to be signed.
-      </div>
-
-      <div class="issue">
-        TODO: We need to discuss if the <code>proof</code> property meta-data should
-        also go into the EIP712 signature function.
       </div>
 
     </section>
