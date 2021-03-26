@@ -456,19 +456,19 @@
           </p>
           <pre class="example">
             {
-              'proof' {
-                  'type': 'EthereumEIP712Signature2021',
-                  'created': '2019-12-11T03:50:55Z',
-                  'proofPurpose': 'assertionMethod',
-                  'proofValue': '0x4355c47d63924e8a72e509b65029052eb6c299d53a04e167c5775fd466751c9d07299936d304c153f6443dfa05f40ff007d72911b6f72307f996231605b915621c',
-                  'verificationMethod': 'did:example:aaaa#key-1',
-                  'eip712Domain': {
-                      'messageSchema': 'https://example.com/schemas/v1',
-                      'domain': { ... },        
-                      'primaryType': '...'
-                  }    
-            }
-          </pre>
+              "proof": {
+                "type": "EthereumEip712Signature2021",
+                "created": "2019-12-11T03:50:55Z",
+                "proofPurpose":"assertionMethod",
+                "proofValue":"365e0e565a3bccaa2c52e09bc2d78ea74208e46abf6d6b5f2fc219f3d6d9116f0ff503a54ed360927dd7712bd98ea61f181f4dfcb9f0ef84f35a6e3edd7c67b11b",
+                "verificationMethod":"did:example:aaaabbbb#issuerKey-1",
+                "eip712Domain":{
+                   "messageSchema":"https://example.com/schemas/v1",
+                   "primaryType":"VerifiableCredential"
+                }
+              }
+           }
+           </pre>
         </section>
       </section>
     </section>
@@ -479,126 +479,156 @@
         The following test vectors are provided to assist with implementers.
       </p>
 
-      <pre class="example">
-        {
-          "seed_0": "TBD"
-        }        
-      </pre>
+      <p>
+        The following is an example ECDSA K-256 keypair that can be used to generate EIP712 signatures:
+      </p>
       <pre class="example">
         {
           "keypair_0": {
-            "id": "https://example.com/issuer/123#key-0",
+            "id": "did:example:aaaabbbb#issuerKey-1",
             "type": "EcdsaSecp256k1VerificationKey2019",
-            "controller": "https://example.com/issuer/123",
-            "publicKeyHex": "TBD",
-            "privateKeyHex": "TBD"
+            "controller": "did:example:aaaabbbb",
+            "publicKeyHex": "7266d8c830ba71b9bcd3bfce9853583f808b10bd1a076175506ebcdd2c459173cc1c391c087470933862299242fb583351c587351755482b0e1c49ef469a8edd",
+            "privateKeyHex": "bbb42e125e96d17369a4463488c5630134fdf6d0bd69cc15dd9da4784aaf286a"
           }
         }              
       </pre>
 
+      <p>The following is an example <code>TypedData</code> object before JCS normalization that will be provided to the EIP712 signature function:</p>
       <pre class="example">
         {
-          "issuer_0": {
-            "@context": [
-              "https://www.w3.org/ns/did/v1",
-              "https://example.com/credentials/latest",
-              {
-                "@base": "https://example.com/issuer/123"
-              }
-            ],
-            "id": "https://example.com/issuer/123",
-            "publicKey": [
-              {
-                "id": "#key-0",
-                "type": "EcdsaSecp256k1VerificationKey2019",
-                "controller": "https://example.com/issuer/123",
-                "publicKeyHex": "TBD"
-              }
-            ],
-            "assertionMethod": ["#key-0"]
-          }
-        }
-        
-      </pre>
-
-      <p>The following is a non-normative example of the EIP712 <code>TypedData</code> object:</p>
-      <pre class="example">
-            {
-              'types': {
-                  'EIP712Domain': [
-                    { 'name': 'name', 'type': 'string' },
-                    { 'name': 'version', 'type': 'string' },
-                    { 'name': 'chainId', 'type': 'uint256' },
-                    { 'name': 'salt', 'type': 'bytes32' },
-                  ],
-                  ... messageDataEip712Schema
-              },
-              'domain': {
-                  'name': 'https://www.example.com',
-                  'version': '2',
-                  'chainId': 1,
-                  'salt': '§$§AdwerWO_IE()§%fd__',
-              },
-              'primaryType': 'VerifiableCredential',
-              'message': {
-                  ... messageData
-              }
-          }
-      </pre>
-
-      <p>The following is a non-normative example of the JSON schema for the message to be signed according to EIP712:</p>
-      <pre class="example">
-        {
-          'VerifiableCredential': [
-            { 'name': '@context', 'type': 'string[]' },
-            { 'name': 'type', 'type': 'string[]' },
-            { 'name': 'id', 'type': 'string' },
-            { 'name': 'issuer', 'type': 'string' },
-            { 'name': 'issuanceDate', 'type': 'string' },
-            { 'name': 'credentialSubject', 'type': 'CredentialSubject' },
-            { 'name': 'credentialSchema', 'type': 'CredentialSchema' }
-          ],
-          'CredentialSchema': [
-            { 'name': 'id', 'type': 'string' },
-            { 'name': 'type', 'type': 'string' },
-          ],
-          'CredentialSubject': [
-            { 'name': 'type', 'type': 'Person' },
-            { 'name': 'id', 'type': 'string' }
-          ],
-          'Person': [
-            { 'name': 'type', 'type': 'string' },
-            { 'name': 'id', 'type': 'string' },
-            { 'name': 'name', 'type': 'string' }
-          ]
-        }        
-      </pre>
-
-      <p>The following is a non-normative example of the <code>message</code> object:</p>
-      <pre class="example">
-        {
-          '@context': [
-              'https://www.w3.org/2018/credentials/v1',
-              'https://www.example.com/context/v1',
-              'https://schema.org/Person'
-          ],
-          'type': [
-              'VerifiableCredential',
-              'VerifablePerson'
-          ],
-          'id': 'https://example.com/person/1234',
-          'issuer': 'did:example:bbbb',
-          'issuanceDate': '2010-01-01T19:23:24Z',
-          'credentialSubject': {
-              'id': 'did:example:aaaa',
-              'type': 'Person',
-              'name': 'Vitalik'
+          "types":{
+             "EIP712Domain":[
+                {
+                   "name":"name",
+                   "type":"string"
+                },
+                {
+                   "name":"version",
+                   "type":"string"
+                },
+                {
+                   "name":"chainId",
+                   "type":"uint256"
+                },
+                {
+                   "name":"salt",
+                   "type":"bytes32"
+                }
+             ],
+             "VerifiableCredential":[
+                {
+                   "name":"@context",
+                   "type":"string[]"
+                },
+                {
+                   "name":"type",
+                   "type":"string[]"
+                },
+                {
+                   "name":"id",
+                   "type":"string"
+                },
+                {
+                   "name":"issuer",
+                   "type":"string"
+                },
+                {
+                   "name":"issuanceDate",
+                   "type":"string"
+                },
+                {
+                   "name":"credentialSubject",
+                   "type":"CredentialSubject"
+                },
+                {
+                   "name":"credentialSchema",
+                   "type":"CredentialSchema"
+                }
+             ],
+             "CredentialSchema":[
+                {
+                   "name":"id",
+                   "type":"string"
+                },
+                {
+                   "name":"type",
+                   "type":"string"
+                }
+             ],
+             "CredentialSubject":[
+                {
+                   "name":"type",
+                   "type":"string"
+                },
+                {
+                   "name":"id",
+                   "type":"string"
+                },
+                {
+                   "name":"name",
+                   "type":"string"
+                },
+                {
+                   "name":"child",
+                   "type":"Person"
+                }
+             ],
+             "Person":[
+                {
+                   "name":"name",
+                   "type":"string"
+                }
+             ]
           },
-          'credentialSchema': {
-              'id': 'https://www.example.com/schemas/v1',
-              'type': 'Eip712SchemaValidator2021'
+          "domain":{
+             "name":"https://example.com",
+             "version":"2",
+             "chainId":4,
+             "salt":"0xaaaabbbbccccdddd"
+          },
+          "primaryType":"VerifiableCredential",
+          "message":{
+             "@context":[
+                "https://www.w3.org/2018/credentials/v1",
+                "https://schema.org"
+             ],
+             "type":[
+                "VerifiableCredential"
+             ],
+             "id":"https://example.org/person/1234",
+             "issuer":"did:example:aaaabbbb",
+             "issuanceDate":"2010-01-01T19:23:24Z",
+             "credentialSubject":{
+                "type":"Person",
+                "id":"did:example:bbbbaaaa",
+                "name":"Vitalik",
+                "child":{
+                   "type":"Person",
+                   "name":"Ethereum"
+                }
+             },
+             "credentialSchema":{
+                "id":"https://example.com/schemas/v1",
+                "type":"Eip712SchemaValidator2021"
+             }
           }
-      }        
+       }
+      </pre>
+
+      <p>The following is a non-normative example of the result <code>proof</code> object:</p>
+      <pre class="example">
+        {
+          "type": "EthereumEip712Signature2021",
+          "created": "2019-12-11T03:50:55Z",
+          "proofPurpose":"assertionMethod",
+          "proofValue":"365e0e565a3bccaa2c52e09bc2d78ea74208e46abf6d6b5f2fc219f3d6d9116f0ff503a54ed360927dd7712bd98ea61f181f4dfcb9f0ef84f35a6e3edd7c67b11b",
+          "verificationMethod":"did:example:aaaabbbb#issuerKey-1",
+          "eip712Domain":{
+             "messageSchema":"https://example.com/schemas/v1",
+             "primaryType":"VerifiableCredential"
+          }
+       }
       </pre>
     </section>
 
@@ -649,6 +679,12 @@
         TODO: We need to add a complete list of security considerations, e.g., 
         what happens if EIP712 JSON schema does not match the message to be signed.
       </div>
+
+      <div class="issue">
+        TODO: We need to discuss if the <code>proof</code> property meta-data should
+        also go into the EIP712 signature function.
+      </div>
+
     </section>
   </body>
 </html>
