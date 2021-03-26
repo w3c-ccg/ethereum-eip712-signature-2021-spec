@@ -351,10 +351,14 @@
           <code>types</code> MUST be a JSON array with two entries. The first entry refers to the
           <code>EIP712Domain</code> property that contains the JSON schema according to the EIP712
           specification. The second entry MUST be the JSON schema of the message to be
-          signed in the EIP712 format.
+          signed in the EIP712 format. The second entry MUST contain a property <code>proof</code> of type <code>Proof</code>
+          which contains the JSON schema for all properties of the linked data signature <code>proof</code> property 
+          that need to be signed.
         </li>
         <li>
-          <code>message</code> MUST be the linked data object that contains the message to be signed.
+          <code>message</code> MUST be the linked data object that contains the message to be signed. The message MUST
+          contain a <code>proof</code> property  with values set to the values of 
+          the properties in the resulting linked data signature <code>proof</code> property that are expected to be signed.
         </li>
         <li>
           <code>domain</code> MUST have the value as defined in <code>EIP712</code>.
@@ -364,6 +368,10 @@
           does not have to correspond to any of the types in the <code>message</code>.
         </li>
       </ul>
+
+      <p>
+        Since some of the properties in the <code>proof</code> property need to be signed, the following 
+      </p>
 
       <section>
         <h2>Verification Method</h2>
@@ -400,11 +408,6 @@
             <code>EcdsaSecp256k1VerificationKey2019</code> or <code>EcdsaSecp256k1RecoveryMethod2020</code>.
           </p>
 
-          <div class="issue">
-            TODO: We need to discuss if the <code>proof</code> property meta-data should
-            also go into the EIP712 signature function.
-          </div>
-    
           <p>
             The <code>type</code> property of the proof MUST be <code>EthereumEip712Signature2021</code>.
           </p>            
@@ -449,7 +452,7 @@
                 "type": "EthereumEip712Signature2021",
                 "created": "2019-12-11T03:50:55Z",
                 "proofPurpose": "assertionMethod",
-                "proofValue": "365e0e565a3bccaa2c52e09bc2d78ea74208e46abf6d6b5f2fc219f3d6d9116f0ff503a54ed360927dd7712bd98ea61f181f4dfcb9f0ef84f35a6e3edd7c67b11b",
+                "proofValue": "c565d38982e1a5004efb5ee390fba0a08bb5e72b3f3e91094c66bc395c324f785425d58d5c1a601372d9c16164e380c63e89f1e0ea95fdefdf7b2854c4f938e81b",
                 "verificationMethod": "did:example:aaaabbbb#issuerKey-1",
                 "eip712Domain": {
                    "messageSchema": "https://example.com/schemas/v1",
@@ -533,6 +536,10 @@
                 {
                    "name":"credentialSchema",
                    "type":"CredentialSchema"
+                },
+                {
+                  "proof":"proof",
+                  "type":"Proof"
                 }
              ],
              "CredentialSchema":[
@@ -568,6 +575,24 @@
                    "name":"name",
                    "type":"string"
                 }
+             ],
+             "Proof":[
+                {
+                  "name":"verificationMethod",
+                  "type":"string"
+                },
+                {
+                  "name":"created",
+                  "type":"string"
+                },
+                {
+                  "name":"proofPurpose",
+                  "type":"string"
+                },
+                {
+                  "name":"type",
+                  "type":"string"
+                }
              ]
           },
           "domain":{
@@ -600,9 +625,40 @@
              "credentialSchema":{
                 "id":"https://example.com/schemas/v1",
                 "type":"Eip712SchemaValidator2021"
+             },
+             "proof":{
+                "verificationMethod":"did:example:aaaabbbb#issuerKey-1",
+                "created":"2010-01-01T19:23:24Z",
+                "proofPurpose":"assertionMethod",
+                "type":"EthereumEip712Signature2021"
              }
           }
        }
+      </pre>
+
+      <p>
+        The following is the JSON document after JCS normalization (added linespace after 90 characters):
+      </p>
+      <pre class="example">
+        {"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string
+        "},{"name":"chainId","type":"uint256"},{"name":"salt","type":"bytes32"}],"VerifiableCreden
+        tial":[{"name":"@context","type":"string[]"},{"name":"type","type":"string[]"},{"name":"id
+        ","type":"string"},{"name":"issuer","type":"string"},{"name":"issuanceDate","type":"string
+        "},{"name":"credentialSubject","type":"CredentialSubject"},{"name":"credentialSchema","typ
+        e":"CredentialSchema"},{"name":"proof","type":"Proof"}],"CredentialSchema":[{"name":"id","
+        type":"string"},{"name":"type","type":"string"}],"CredentialSubject":[{"name":"type","type
+        ":"string"},{"name":"id","type":"string"},{"name":"name","type":"string"},{"name":"child",
+        "type":"Person"}],"Person":[{"name":"name","type":"string"}],"Proof":[{"name":"verificatio
+        nMethod","type":"string"},{"name":"created","type":"string"},{"name":"proofPurpose","type"
+        :"string"},{"name":"type","type":"string"}]},"domain":{"name":"https://example.com","versi
+        on":"2","chainId":4,"salt":"0xaaaabbbbccccdddd"},"primaryType":"VerifiableCredential","mes
+        sage":{"@context":["https://www.w3.org/2018/credentials/v1","https://schema.org"],"type":[
+        "VerifiableCredential"],"id":"https://example.org/person/1234","issuer":"did:example:aaaab
+        bbb","issuanceDate":"2010-01-01T19:23:24Z","credentialSubject":{"type":"Person","id":"did:
+        example:bbbbaaaa","name":"Vitalik","child":{"type":"Person","name":"Ethereum"}},"credentia
+        lSchema":{"id":"https://example.com/schemas/v1","type":"Eip712SchemaValidator2021"},"proof
+        ":{"verificationMethod":"did:example:aaaabbbb#issuerKey-1","created":"2010-01-01T19:23:24Z
+        ","proofPurpose":"assertionMethod","type":"EthereumEip712Signature2021"}}}        
       </pre>
 
       <p>The following is a non-normative example of the result <code>proof</code> object:</p>
@@ -611,7 +667,7 @@
           "type": "EthereumEip712Signature2021",
           "created": "2019-12-11T03:50:55Z",
           "proofPurpose":"assertionMethod",
-          "proofValue":"365e0e565a3bccaa2c52e09bc2d78ea74208e46abf6d6b5f2fc219f3d6d9116f0ff503a54ed360927dd7712bd98ea61f181f4dfcb9f0ef84f35a6e3edd7c67b11b",
+          "proofValue":"c565d38982e1a5004efb5ee390fba0a08bb5e72b3f3e91094c66bc395c324f785425d58d5c1a601372d9c16164e380c63e89f1e0ea95fdefdf7b2854c4f938e81b",
           "verificationMethod":"did:example:aaaabbbb#issuerKey-1",
           "eip712Domain":{
              "messageSchema":"https://example.com/schemas/v1",
