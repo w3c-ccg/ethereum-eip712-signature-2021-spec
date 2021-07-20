@@ -449,7 +449,7 @@
                 "type": "EthereumEip712Signature2021",
                 "created": "2019-12-11T03:50:55Z",
                 "proofPurpose": "assertionMethod",
-                "proofValue": "c565d38982e1a5004efb5ee390fba0a08bb5e72b3f3e91094c66bc395c324f785425d58d5c1a601372d9c16164e380c63e89f1e0ea95fdefdf7b2854c4f938e81b",
+                "proofValue": "0xc565d38982e1a5004efb5ee390fba0a08bb5e72b3f3e91094c66bc395c324f785425d58d5c1a601372d9c16164e380c63e89f1e0ea95fdefdf7b2854c4f938e81b",
                 "verificationMethod": "did:example:aaaabbbb#issuerKey-1",
                 "eip712Domain": {
                    "messageSchema": "https://example.com/schemas/v1",
@@ -580,6 +580,10 @@
              ],
              "Person":[
                 {
+                   "name":"type",
+                   "type":"string"
+                }
+                {
                    "name":"name",
                    "type":"string"
                 }
@@ -607,7 +611,7 @@
              "name":"https://example.com",
              "version":"2",
              "chainId":4,
-             "salt":"0xaaaabbbbccccdddd"
+             "salt":"0x000000000000000000000000000000000000000000000000aaaabbbbccccdddd"
           },
           "primaryType":"VerifiableCredential",
           "message":{
@@ -636,7 +640,7 @@
              },
              "proof":{
                 "verificationMethod":"did:example:aaaabbbb#issuerKey-1",
-                "created":"2010-01-01T19:23:24Z",
+                "created":"2021-07-09T19:47:41Z",
                 "proofPurpose":"assertionMethod",
                 "type":"EthereumEip712Signature2021"
              }
@@ -648,40 +652,156 @@
         The following is the JSON document after JCS normalization (added linespace after 90 characters):
       </p>
       <pre class="example">
-        {"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string
-        "},{"name":"chainId","type":"uint256"},{"name":"salt","type":"bytes32"}],"VerifiableCreden
-        tial":[{"name":"@context","type":"string[]"},{"name":"type","type":"string[]"},{"name":"id
-        ","type":"string"},{"name":"issuer","type":"string"},{"name":"issuanceDate","type":"string
-        "},{"name":"credentialSubject","type":"CredentialSubject"},{"name":"credentialSchema","typ
-        e":"CredentialSchema"},{"name":"proof","type":"Proof"}],"CredentialSchema":[{"name":"id","
-        type":"string"},{"name":"type","type":"string"}],"CredentialSubject":[{"name":"type","type
-        ":"string"},{"name":"id","type":"string"},{"name":"name","type":"string"},{"name":"child",
-        "type":"Person"}],"Person":[{"name":"name","type":"string"}],"Proof":[{"name":"verificatio
-        nMethod","type":"string"},{"name":"created","type":"string"},{"name":"proofPurpose","type"
-        :"string"},{"name":"type","type":"string"}]},"domain":{"name":"https://example.com","versi
-        on":"2","chainId":4,"salt":"0xaaaabbbbccccdddd"},"primaryType":"VerifiableCredential","mes
-        sage":{"@context":["https://www.w3.org/2018/credentials/v1","https://schema.org"],"type":[
-        "VerifiableCredential"],"id":"https://example.org/person/1234","issuer":"did:example:aaaab
-        bbb","issuanceDate":"2010-01-01T19:23:24Z","credentialSubject":{"type":"Person","id":"did:
-        example:bbbbaaaa","name":"Vitalik","child":{"type":"Person","name":"Ethereum"}},"credentia
-        lSchema":{"id":"https://example.com/schemas/v1","type":"Eip712SchemaValidator2021"},"proof
-        ":{"verificationMethod":"did:example:aaaabbbb#issuerKey-1","created":"2010-01-01T19:23:24Z
-        ","proofPurpose":"assertionMethod","type":"EthereumEip712Signature2021"}}}        
+        {"domain":{"chainId":4,"name":"https://example.com","salt":"0x0000000000000000000000000000
+        00000000000000000000aaaabbbbccccdddd","version":"2"},"message":{"@context":["https://www.w
+        3.org/2018/credentials/v1","https://schema.org"],"credentialSchema":{"id":"https://example
+        .com/schemas/v1","type":"Eip712SchemaValidator2021"},"credentialSubject":{"child":{"name":
+        "Ethereum","type":"Person"},"id":"did:example:bbbbaaaa","name":"Vitalik","type":"Person"},
+        "id":"https://example.org/person/1234","issuanceDate":"2010-01-01T19:23:24Z","issuer":"did
+        :example:aaaabbbb","proof":{"created":"2021-07-09T19:47:41Z","proofPurpose":"assertionMeth
+        od","type":"EthereumEip712Signature2021","verificationMethod":"did:example:aaaabbbb#issuer
+        Key-1"},"type":["VerifiableCredential"]},"primaryType":"VerifiableCredential","types":{"Cr
+        edentialSchema":[{"name":"id","type":"string"},{"name":"type","type":"string"}],"Credentia
+        lSubject":[{"name":"type","type":"string"},{"name":"id","type":"string"},{"name":"name","t
+        ype":"string"},{"name":"child","type":"Person"}],"EIP712Domain":[{"name":"name","type":"st
+        ring"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"sal
+        t","type":"bytes32"}],"Person":[{"name":"type","type":"string"},{"name":"name","type":"str
+        ing"}],"Proof":[{"name":"verificationMethod","type":"string"},{"name":"created","type":"st
+        ring"},{"name":"proofPurpose","type":"string"},{"name":"type","type":"string"}],"Verifiabl
+        eCredential":[{"name":"@context","type":"string[]"},{"name":"type","type":"string[]"},{"na
+        me":"id","type":"string"},{"name":"issuer","type":"string"},{"name":"issuanceDate","type":
+        "string"},{"name":"credentialSubject","type":"CredentialSubject"},{"name":"credentialSchem
+        a","type":"CredentialSchema"},{"name":"proof","type":"Proof"}]}}
       </pre>
 
-      <p>The following is a non-normative example of the result <code>proof</code> object:</p>
+      <p>The following is the resulting <code>proof</code> object:</p>
       <pre class="example">
         {
           "type": "EthereumEip712Signature2021",
-          "created": "2019-12-11T03:50:55Z",
-          "proofPurpose":"assertionMethod",
-          "proofValue":"c565d38982e1a5004efb5ee390fba0a08bb5e72b3f3e91094c66bc395c324f785425d58d5c1a601372d9c16164e380c63e89f1e0ea95fdefdf7b2854c4f938e81b",
-          "verificationMethod":"did:example:aaaabbbb#issuerKey-1",
-          "eip712Domain":{
-             "messageSchema":"https://example.com/schemas/v1",
-             "primaryType":"VerifiableCredential"
+          "created": "2021-07-09T19:47:41Z",
+          "proofPurpose": "assertionMethod",
+          "proofValue": "0x5fb8f18f21f54c2df8a2720d0afcee7dbbb18e4b7a22ce6e8183633d63b076d329122584db769cd78b6cd5a7094ede5ceaa43317907539187f1f0d8875f99e051b",
+          "verificationMethod": "did:example:aaaabbbb#issuerKey-1",
+          "eip712Domain": {
+            "domain": {
+              "chainId": 4,
+              "name": "https://example.com",
+              "salt": "0x000000000000000000000000000000000000000000000000aaaabbbbccccdddd",
+              "version": "2"
+            },
+            "messageSchema": {
+              "CredentialSchema": [
+                {
+                  "name": "id",
+                  "type": "string"
+                },
+                {
+                  "name": "type",
+                  "type": "string"
+                }
+              ],
+              "CredentialSubject": [
+                {
+                  "name": "type",
+                  "type": "string"
+                },
+                {
+                  "name": "id",
+                  "type": "string"
+                },
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "child",
+                  "type": "Person"
+                }
+              ],
+              "EIP712Domain": [
+                {
+                  "name": "name",
+                  "type": "string"
+                },
+                {
+                  "name": "version",
+                  "type": "string"
+                },
+                {
+                  "name": "chainId",
+                  "type": "uint256"
+                },
+                {
+                  "name": "salt",
+                  "type": "bytes32"
+                }
+              ],
+              "Person": [
+                {
+                  "name": "type",
+                  "type": "string"
+                },
+                {
+                  "name": "name",
+                  "type": "string"
+                }
+              ],
+              "Proof": [
+                {
+                  "name": "verificationMethod",
+                  "type": "string"
+                },
+                {
+                  "name": "created",
+                  "type": "string"
+                },
+                {
+                  "name": "proofPurpose",
+                  "type": "string"
+                },
+                {
+                  "name": "type",
+                  "type": "string"
+                }
+              ],
+              "VerifiableCredential": [
+                {
+                  "name": "@context",
+                  "type": "string[]"
+                },
+                {
+                  "name": "type",
+                  "type": "string[]"
+                },
+                {
+                  "name": "id",
+                  "type": "string"
+                },
+                {
+                  "name": "issuer",
+                  "type": "string"
+                },
+                {
+                  "name": "issuanceDate",
+                  "type": "string"
+                },
+                {
+                  "name": "credentialSubject",
+                  "type": "CredentialSubject"
+                },
+                {
+                  "name": "credentialSchema",
+                  "type": "CredentialSchema"
+                },
+                {
+                  "name": "proof",
+                  "type": "Proof"
+                }
+              ]
+            },
+            "primaryType": "VerifiableCredential"
           }
-       }
+        }
       </pre>
     </section>
 
