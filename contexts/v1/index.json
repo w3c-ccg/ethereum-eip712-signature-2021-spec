@@ -42,11 +42,6 @@
               "@id": "https://w3id.org/security#capabilityDelegationMethod",
               "@type": "@id",
               "@container": "@set"
-            },
-            "keyAgreement": {
-              "@id": "https://w3id.org/security#keyAgreementMethod",
-              "@type": "@id",
-              "@container": "@set"
             }
           }
         },
