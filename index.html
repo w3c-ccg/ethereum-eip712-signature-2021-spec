@@ -466,347 +466,365 @@
       </section>
     </section>
 
-    <section>
+    <section id="test-vectors">
       <h2>Test Vectors</h2>
       <p>
         The following test vectors are provided to assist with implementers.
       </p>
 
       <p>
-        The following is an example ECDSA K-256 keypair that can be used to generate EIP712 signatures:
+        The following is an example Ethereum-compatible hexadecimal private key, and corresponding <code>did:pkh</code> <code>verificationMethod</code>  that can be used to assist with test vectors:
       </p>
       <pre class="example">
         {
-          "keypair_0": {
-            "id": "did:example:aaaabbbb#issuerKey-1",
-            "type": "EcdsaSecp256k1VerificationKey2019",
-            "controller": "did:example:aaaabbbb",
-            "publicKeyJwk": {
-              "kty": "EC",
-              "crv": "secp256k1",
-              "x": "cmbYyDC6cbm807_OmFNYP4CLEL0aB2F1UG683SxFkXM",
-              "y": "zBw5HAh0cJM4YimSQvtYM1HFhzUXVUgrDhxJ70aajt0",
+          "privateKey": "0x149195a4059ac8cafe2d56fc612f613b6b18b9265a73143c9f6d7cfbbed76b7e",
+          "verificationMethod": "did:pkh:eth:0xAED7EA8035eEc47E657B34eF5D020c7005487443"
+        }
+      </pre>
+
+      <p>The following are some example input documents that will be provided to the Ethereum EIP712 Signature Suite, to generate various type of output proofs:</p>
+      <pre class="example">
+        {
+          "testBasicDocument": {
+            "@context": ["https://schema.org", "https://w3id.org/security/v2"],
+            "@type": "Person",
+            "firstName": "Jane",
+            "lastName": "Does",
+            "jobTitle": "Professor",
+            "telephone": "(425) 123-4567",
+            "email": "jane.doe@example.com"
+          },
+          "testNestedDocument": {
+            "@context": ["https://schema.org", "https://w3id.org/security/v2"],
+            "@type": "Person",
+            "data": {
+              "name": {
+                "firstName": "John",
+                "lastName": "Doe"
+              },
+              "job": {
+                "jobTitle": "Professor",
+                "employer": "University of Waterloo"
+              }
             },
-            "privateKeyJwk": {
-              "kty": "EC",
-              "crv": "secp256k1",
-              "x": "cmbYyDC6cbm807_OmFNYP4CLEL0aB2F1UG683SxFkXM",
-              "y": "zBw5HAh0cJM4YimSQvtYM1HFhzUXVUgrDhxJ70aajt0",
-              "d": "u7QuEl6W0XNppEY0iMVjATT99tC9acwV3Z2keEqvKGo"
+            "telephone": "(425) 123-4567"
+          }
+        }
+      </pre>
+
+      <section>
+        <h3>Basic Document - Types Generation - Embedded Types</h3>
+
+        <p>
+          With the following <code>inputOptions</code> provided to the signature suite along with the <code>testBasicDocument</code> input document:
+        </p>
+
+        <pre class="example">
+          {
+            "date": "2021-08-30T13:28:02Z"
+          }
+        </pre>
+
+        <p>The following is the resulting <code>proof</code> object:</p>
+
+        <pre class="example">
+          {
+            "created": "2021-08-30T13:28:02Z",
+            "proofPurpose": "assertionMethod",
+            "type": "EthereumEip712Signature2021",
+            "verificationMethod": "did:pkh:eth:0xAED7EA8035eEc47E657B34eF5D020c7005487443",
+            "proofValue": "0xd8ced27b921866a9cb6fb859503714ad4be03ae70706237d05c9f113da7f4a1d7f74f9f9df4301571f5c4f253c09e1b5119a85f00760f33924d72a07d31881ec1b",
+            "eip712Domain": {
+              "domain": {},
+              "messageSchema": {
+                "Document": [
+                  {
+                    "name": "@context",
+                    "type": "string[]"
+                  },
+                  {
+                    "name": "@type",
+                    "type": "string"
+                  },
+                  {
+                    "name": "email",
+                    "type": "string"
+                  },
+                  {
+                    "name": "firstName",
+                    "type": "string"
+                  },
+                  {
+                    "name": "jobTitle",
+                    "type": "string"
+                  },
+                  {
+                    "name": "lastName",
+                    "type": "string"
+                  },
+                  {
+                    "name": "telephone",
+                    "type": "string"
+                  }
+                ]
+              },
+              "primaryType": "Document"
             }
           }
-        }              
-      </pre>
+        </pre>
+      </section>
+      <section>
+        <h3>Nested Document - TypedData Provided - Embedded Types</h3>
 
-      <p>The following is an example <code>TypedData</code> object before JCS normalization that will be provided to the EIP712 signature function:</p>
-      <pre class="example">
-        {
-          "types":{
-             "EIP712Domain":[
-                {
-                   "name":"name",
-                   "type":"string"
-                },
-                {
-                   "name":"version",
-                   "type":"string"
-                },
-                {
-                   "name":"chainId",
-                   "type":"uint256"
-                },
-                {
-                   "name":"salt",
-                   "type":"bytes32"
-                }
-             ],
-             "VerifiableCredential":[
-                {
-                   "name":"@context",
-                   "type":"string[]"
-                },
-                {
-                   "name":"type",
-                   "type":"string[]"
-                },
-                {
-                   "name":"id",
-                   "type":"string"
-                },
-                {
-                   "name":"issuer",
-                   "type":"string"
-                },
-                {
-                   "name":"issuanceDate",
-                   "type":"string"
-                },
-                {
-                   "name":"credentialSubject",
-                   "type":"CredentialSubject"
-                },
-                {
-                   "name":"credentialSchema",
-                   "type":"CredentialSchema"
-                },
-                {
-                  "proof":"proof",
-                  "type":"Proof"
-                }
-             ],
-             "CredentialSchema":[
-                {
-                   "name":"id",
-                   "type":"string"
-                },
-                {
-                   "name":"type",
-                   "type":"string"
-                }
-             ],
-             "CredentialSubject":[
-                {
-                   "name":"type",
-                   "type":"string"
-                },
-                {
-                   "name":"id",
-                   "type":"string"
-                },
-                {
-                   "name":"name",
-                   "type":"string"
-                },
-                {
-                   "name":"child",
-                   "type":"Person"
-                }
-             ],
-             "Person":[
-                {
-                   "name":"type",
-                   "type":"string"
-                }
-                {
-                   "name":"name",
-                   "type":"string"
-                }
-             ],
-             "Proof":[
-                {
-                  "name":"verificationMethod",
-                  "type":"string"
-                },
-                {
-                  "name":"created",
-                  "type":"string"
-                },
-                {
-                  "name":"proofPurpose",
-                  "type":"string"
-                },
-                {
-                  "name":"type",
-                  "type":"string"
-                }
-             ]
-          },
-          "domain":{
-             "name":"https://example.com",
-             "version":"2",
-             "chainId":4,
-             "salt":"0x000000000000000000000000000000000000000000000000aaaabbbbccccdddd"
-          },
-          "primaryType":"VerifiableCredential",
-          "message":{
-             "@context":[
-                "https://www.w3.org/2018/credentials/v1",
-                "https://schema.org"
-             ],
-             "type":[
-                "VerifiableCredential"
-             ],
-             "id":"https://example.org/person/1234",
-             "issuer":"did:example:aaaabbbb",
-             "issuanceDate":"2010-01-01T19:23:24Z",
-             "credentialSubject":{
-                "type":"Person",
-                "id":"did:example:bbbbaaaa",
-                "name":"Vitalik",
-                "child":{
-                   "type":"Person",
-                   "name":"Ethereum"
-                }
-             },
-             "credentialSchema":{
-                "id":"https://example.com/schemas/v1",
-                "type":"Eip712SchemaValidator2021"
-             },
-             "proof":{
-                "verificationMethod":"did:example:aaaabbbb#issuerKey-1",
-                "created":"2021-07-09T19:47:41Z",
-                "proofPurpose":"assertionMethod",
-                "type":"EthereumEip712Signature2021"
-             }
-          }
-       }
-      </pre>
+        <p>
+          With the following <code>inputOptions</code> provided to the signature suite along with the <code>testNestedDocument</code> input document:
+        </p>
 
-      <p>
-        The following is the JSON document after JCS normalization (added linespace after 90 characters):
-      </p>
-      <pre class="example">
-        {"domain":{"chainId":4,"name":"https://example.com","salt":"0x0000000000000000000000000000
-        00000000000000000000aaaabbbbccccdddd","version":"2"},"message":{"@context":["https://www.w
-        3.org/2018/credentials/v1","https://schema.org"],"credentialSchema":{"id":"https://example
-        .com/schemas/v1","type":"Eip712SchemaValidator2021"},"credentialSubject":{"child":{"name":
-        "Ethereum","type":"Person"},"id":"did:example:bbbbaaaa","name":"Vitalik","type":"Person"},
-        "id":"https://example.org/person/1234","issuanceDate":"2010-01-01T19:23:24Z","issuer":"did
-        :example:aaaabbbb","proof":{"created":"2021-07-09T19:47:41Z","proofPurpose":"assertionMeth
-        od","type":"EthereumEip712Signature2021","verificationMethod":"did:example:aaaabbbb#issuer
-        Key-1"},"type":["VerifiableCredential"]},"primaryType":"VerifiableCredential","types":{"Cr
-        edentialSchema":[{"name":"id","type":"string"},{"name":"type","type":"string"}],"Credentia
-        lSubject":[{"name":"type","type":"string"},{"name":"id","type":"string"},{"name":"name","t
-        ype":"string"},{"name":"child","type":"Person"}],"EIP712Domain":[{"name":"name","type":"st
-        ring"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"sal
-        t","type":"bytes32"}],"Person":[{"name":"type","type":"string"},{"name":"name","type":"str
-        ing"}],"Proof":[{"name":"verificationMethod","type":"string"},{"name":"created","type":"st
-        ring"},{"name":"proofPurpose","type":"string"},{"name":"type","type":"string"}],"Verifiabl
-        eCredential":[{"name":"@context","type":"string[]"},{"name":"type","type":"string[]"},{"na
-        me":"id","type":"string"},{"name":"issuer","type":"string"},{"name":"issuanceDate","type":
-        "string"},{"name":"credentialSubject","type":"CredentialSubject"},{"name":"credentialSchem
-        a","type":"CredentialSchema"},{"name":"proof","type":"Proof"}]}}
-      </pre>
-
-      <p>The following is the resulting <code>proof</code> object:</p>
-      <pre class="example">
-        {
-          "type": "EthereumEip712Signature2021",
-          "created": "2021-07-09T19:47:41Z",
-          "proofPurpose": "assertionMethod",
-          "proofValue": "0x5fb8f18f21f54c2df8a2720d0afcee7dbbb18e4b7a22ce6e8183633d63b076d329122584db769cd78b6cd5a7094ede5ceaa43317907539187f1f0d8875f99e051b",
-          "verificationMethod": "did:example:aaaabbbb#issuerKey-1",
-          "eip712Domain": {
-            "domain": {
-              "chainId": 4,
-              "name": "https://example.com",
-              "salt": "0x000000000000000000000000000000000000000000000000aaaabbbbccccdddd",
-              "version": "2"
-            },
-            "messageSchema": {
-              "CredentialSchema": [
+        <pre class="example">
+          {
+            "types": {
+              "Data": [
                 {
-                  "name": "id",
-                  "type": "string"
-                },
-                {
-                  "name": "type",
-                  "type": "string"
-                }
-              ],
-              "CredentialSubject": [
-                {
-                  "name": "type",
-                  "type": "string"
-                },
-                {
-                  "name": "id",
-                  "type": "string"
+                  "name": "job",
+                  "type": "Job"
                 },
                 {
                   "name": "name",
-                  "type": "string"
-                },
-                {
-                  "name": "child",
-                  "type": "Person"
+                  "type": "Name"
                 }
               ],
-              "EIP712Domain": [
-                {
-                  "name": "name",
-                  "type": "string"
-                },
-                {
-                  "name": "version",
-                  "type": "string"
-                },
-                {
-                  "name": "chainId",
-                  "type": "uint256"
-                },
-                {
-                  "name": "salt",
-                  "type": "bytes32"
-                }
-              ],
-              "Person": [
-                {
-                  "name": "type",
-                  "type": "string"
-                },
-                {
-                  "name": "name",
-                  "type": "string"
-                }
-              ],
-              "Proof": [
-                {
-                  "name": "verificationMethod",
-                  "type": "string"
-                },
-                {
-                  "name": "created",
-                  "type": "string"
-                },
-                {
-                  "name": "proofPurpose",
-                  "type": "string"
-                },
-                {
-                  "name": "type",
-                  "type": "string"
-                }
-              ],
-              "VerifiableCredential": [
+              "Document": [
                 {
                   "name": "@context",
                   "type": "string[]"
                 },
                 {
-                  "name": "type",
-                  "type": "string[]"
-                },
-                {
-                  "name": "id",
+                  "name": "@type",
                   "type": "string"
                 },
                 {
-                  "name": "issuer",
+                  "name": "data",
+                  "type": "Data"
+                },
+                {
+                  "name": "telephone",
+                  "type": "string"
+                }
+              ],
+              "Job": [
+                {
+                  "name": "employer",
                   "type": "string"
                 },
                 {
-                  "name": "issuanceDate",
+                  "name": "jobTitle",
+                  "type": "string"
+                }
+              ],
+              "Name": [
+                {
+                  "name": "firstName",
                   "type": "string"
                 },
                 {
-                  "name": "credentialSubject",
-                  "type": "CredentialSubject"
-                },
-                {
-                  "name": "credentialSchema",
-                  "type": "CredentialSchema"
-                },
-                {
-                  "name": "proof",
-                  "type": "Proof"
+                  "name": "lastName",
+                  "type": "string"
                 }
               ]
             },
-            "primaryType": "VerifiableCredential"
+            "domain": {},
+            "date": "2021-08-30T13:28:02Z"
           }
-        }
-      </pre>
+        </pre>
+
+        <p>The following is the resulting <code>proof</code> object:</p>
+
+        <pre class="example">
+          {
+            "created": "2021-08-30T13:28:02Z",
+            "proofPurpose": "assertionMethod",
+            "type": "EthereumEip712Signature2021",
+            "verificationMethod": "did:pkh:eth:0xAED7EA8035eEc47E657B34eF5D020c7005487443",
+            "proofValue": "0xc932c9f35b465f3f4f208ce7aa3335541ddb1e3d970ed36b9db29c13deadb54d53b5d87eafce0f9df6deb42e9522c079a995166d5c4f711d9ce9b6bde0747a461c",
+            "eip712Domain": {
+              "domain": {},
+              "messageSchema": {
+                "Data": [
+                  {
+                    "name": "job",
+                    "type": "Job"
+                  },
+                  {
+                    "name": "name",
+                    "type": "Name"
+                  }
+                ],
+                "Document": [
+                  {
+                    "name": "@context",
+                    "type": "string[]"
+                  },
+                  {
+                    "name": "@type",
+                    "type": "string"
+                  },
+                  {
+                    "name": "data",
+                    "type": "Data"
+                  },
+                  {
+                    "name": "telephone",
+                    "type": "string"
+                  }
+                ],
+                "Job": [
+                  {
+                    "name": "employer",
+                    "type": "string"
+                  },
+                  {
+                    "name": "jobTitle",
+                    "type": "string"
+                  }
+                ],
+                "Name": [
+                  {
+                    "name": "firstName",
+                    "type": "string"
+                  },
+                  {
+                    "name": "lastName",
+                    "type": "string"
+                  }
+                ]
+              },
+              "primaryType": "Document"
+            }
+          }
+        </pre>
+      </section>
+
+      <section>
+        <h3>Nested Document - Types Generation - TypedData Schema as URI</h3>
+
+        <p>
+          With the following <code>inputOptions</code> provided to the signature suite along with the <code>testNestedDocument</code> input document:
+        </p>
+
+        <pre class="example">
+          {
+            "embedAsURI": true,
+            "date": "2021-08-30T13:28:02Z"
+          }
+        </pre>
+
+        <p>The following is the resulting <code>proof</code> object:</p>
+
+        <pre class="example">
+          {
+            "created": "2021-08-30T13:28:02Z",
+            "proofPurpose": "assertionMethod",
+            "type": "EthereumEip712Signature2021",
+            "verificationMethod": "did:pkh:eth:0xAED7EA8035eEc47E657B34eF5D020c7005487443",
+            "proofValue": "0xc932c9f35b465f3f4f208ce7aa3335541ddb1e3d970ed36b9db29c13deadb54d53b5d87eafce0f9df6deb42e9522c079a995166d5c4f711d9ce9b6bde0747a461c",
+            "eip712Domain": {
+              "domain": {},
+              "messageSchema": "https://example.com/messageSchema.json",
+              "primaryType": "Document"
+            }
+          }
+        </pre>
+
+        <p>Dereferencing the <code>messageSchema</code> URI should result in the following object:</p>
+
+        <pre class="example">
+          {
+            "Data": [
+              {
+                "name": "job",
+                "type": "Job"
+              },
+              {
+                "name": "name",
+                "type": "Name"
+              }
+            ],
+            "Document": [
+              {
+                "name": "@context",
+                "type": "string[]"
+              },
+              {
+                "name": "@type",
+                "type": "string"
+              },
+              {
+                "name": "data",
+                "type": "Data"
+              },
+              {
+                "name": "telephone",
+                "type": "string"
+              }
+            ],
+            "Job": [
+              {
+                "name": "employer",
+                "type": "string"
+              },
+              {
+                "name": "jobTitle",
+                "type": "string"
+              }
+            ],
+            "Name": [
+              {
+                "name": "firstName",
+                "type": "string"
+              },
+              {
+                "name": "lastName",
+                "type": "string"
+              }
+            ]
+          }
+        </pre>
+
+        <p class="note">
+          The example URI provided above is not a real URI that would dereference, but outlines the expected behaviour.
+        </p>
+      </section>
+
+      <section>
+        <h3>Nested Document - Types Generation - TypedData not embedded</h3>
+
+        <p>
+          With the following <code>inputOptions</code> provided to the signature suite along with the <code>testNestedDocument</code> input document:
+        </p>
+
+        <pre class="example">
+          {
+            "embed": false,
+            "date": "2021-08-30T13:28:02Z"
+          }
+        </pre>
+
+        <p>The following is the resulting <code>proof</code> object:</p>
+
+        <pre class="example">
+          {
+            "created": "2021-08-30T13:28:02Z",
+            "proofPurpose": "assertionMethod",
+            "type": "EthereumEip712Signature2021",
+            "verificationMethod": "did:pkh:eth:0xAED7EA8035eEc47E657B34eF5D020c7005487443",
+            "proofValue": "0xc932c9f35b465f3f4f208ce7aa3335541ddb1e3d970ed36b9db29c13deadb54d53b5d87eafce0f9df6deb42e9522c079a995166d5c4f711d9ce9b6bde0747a461c"
+          }
+        </pre>
+
+        <p class="note">
+          During Proof Verification, the types would have to be regenerated using the types generation algorithm. 
+        </p>
+      </section>
     </section>
 
     <section id="conformance">
