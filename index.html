@@ -137,7 +137,7 @@
         ISO_8601: {
           title: "ISO_8601",
           href: "https://en.wikipedia.org/wiki/ISO_8601",
-        }
+        },
       },
     };
   </script>
@@ -414,9 +414,10 @@
         <li>Canonicalizes the input document using the <a href="#dfn-canonicalization-algorithm">canonicalization
             algorithm</a></li>
         <li>If `primaryType` is not provided, set `primaryType = "Document"` else use the provided value.</li>
-        <li>For each property in the canonicalized input document, the algorithm checks the type of the value specific
-          to the
-          implementation language.</li>
+        <li>For each property in the canonicalized input document, iterated in lexicographic order of property name
+          according to <a href="https://datatracker.ietf.org/doc/html/rfc8785#section-3.2.3">RFC 8785 Section 3.2.3</a>,
+          the algorithm checks the type of the value specific to the implementation language.</li>
+        </li>
         <li>If the type of the value is a primitive <code>boolean</code>, <code>number</code> or <code>string</code>,
           push an object to <code>types</code> with the <code>name</code> set to the property name of the input
           document, and <code>type</code> set to the corresponding EIP712 primitive type
@@ -454,7 +455,8 @@
             </li>
             <li>Loop over <code>_recursiveOutput</code>, and if any keys other than <code>primaryType</code> are
               present,
-              add them directly to <code>output</code></li>
+              add them directly to <code>output</code>. If any such key already has an entry in <code>output</code>,
+              raise an error.</li>
           </ol>
         </li>
 
@@ -468,39 +470,39 @@
           {
             "@context": ["https://schema.org", "https://w3id.org/security/v2"],
             "@type": "Person",
-            name: {
-              first: "Jane",
-              last: "Doe",
+            "name": {
+              "first": "Jane",
+              "last": "Doe"
             },
-            otherData: {
-              jobTitle: "Professor",
-              school: "University of ExampleLand",
+            "otherData": {
+              "jobTitle": "Professor",
+              "school": "University of ExampleLand"
             },
-            telephone: "(425) 123-4567",
-            email: "jane.doe@example.com",
-          };
+            "telephone": "(425) 123-4567",
+            "email": "jane.doe@example.com"
+          }
          </pre>
 
       It will generate the following schema:
       <pre class="example">
-          {
-            Name: [
-              { name: "first", type: "string" },
-              { name: "last", type: "string" },
-            ],
-            OtherData: [
-              { name: "jobTitle", type: "string" },
-              { name: "school", type: "string" },
-            ],
-            Document: [
-              { name: "@context", type: "string[]" },
-              { name: "@type", type: "string" },
-              { name: "name", type: "Name" },
-              { name: "otherData", type: "OtherData" },
-              { name: "telephone", type: "string" },
-              { name: "email", type: "string" },
-            ],
-          }
+        {
+          "Document": [
+            { "name": "@context", type: "string[]" },
+            { "name": "@type", type: "string" },
+            { "name": "email", type: "string" },
+            { "name": "name", type: "Name" },
+            { "name": "otherData", type: "OtherData" },
+            { "name": "telephone", type: "string" }
+          ],
+          "Name": [
+            { "name": "first", type: "string" },
+            { "name": "last", type: "string" }
+          ],
+          "OtherData": [
+            { "name": "jobTitle", type: "string" },
+            { "name": "school", type: "string" }
+          ]
+        }
         </pre>
     </section>
 
