@@ -314,6 +314,16 @@
         The <code>type</code> of the linked data proof for the signature suite
         <a>EthereumEip712Signature2021</a>.
       </dd>
+
+      <dt><dfn>@context</dfn></dt>
+      <dd>
+        The property of a <a>linked data document</a> used to reference JSON-LD
+        context files. See also the
+        <a href="https://www.w3.org/TR/vc-data-model/#contexts">Contexts</a>
+        section of the VC Data Model, and the definition of
+        <a href="https://www.w3.org/TR/json-ld11/#dfn-context">context</a> in
+        JSON-LD 1.1.
+      </dd>
     </dl>
   </section>
 
@@ -603,6 +613,15 @@
            }
            </pre>
       </section>
+    </section>
+
+    <section>
+      <h2>JSON-LD Context</h2>
+      <p>
+        The <a><code>@context</code></a> property of a JSON-LD document using
+        this signature suite <em>SHOULD</em> include the following URI string:
+        <code>https://w3id.org/security/suites/eip712sig-2021/v1</code>.
+      </p>
     </section>
   </section>
 
