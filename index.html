@@ -428,11 +428,11 @@
           </p>
 
           <p>
-            The <code>eip712Domain</code> property MUST contain meta-information about the signature generation process
+            The <code>eip712</code> property MUST contain meta-information about the signature generation process
             that can be used when the signature is verified. It MUST contain the following properties:
             <ul>
               <li>
-                <code>messageSchema</code> MUST be a URI that results in an object that contains the JSON schema
+                <code>types</code> MUST be a URI that results in an object that contains the JSON schema
                 that describes the message to be signed according to EIP712, or an object that contains the JSON schema itself.              
               </li>
               <li>
@@ -455,8 +455,8 @@
                 "proofPurpose": "assertionMethod",
                 "proofValue": "0xc565d38982e1a5004efb5ee390fba0a08bb5e72b3f3e91094c66bc395c324f785425d58d5c1a601372d9c16164e380c63e89f1e0ea95fdefdf7b2854c4f938e81b",
                 "verificationMethod": "did:example:aaaabbbb#issuerKey-1",
-                "eip712Domain": {
-                   "messageSchema": "https://example.com/schemas/v1",
+                "eip712": {
+                   "types": "https://example.com/schemas/v1",
                    "primaryType": "VerifiableCredential"
                 }
               }
@@ -686,14 +686,14 @@
           "proofPurpose": "assertionMethod",
           "proofValue": "0x5fb8f18f21f54c2df8a2720d0afcee7dbbb18e4b7a22ce6e8183633d63b076d329122584db769cd78b6cd5a7094ede5ceaa43317907539187f1f0d8875f99e051b",
           "verificationMethod": "did:example:aaaabbbb#issuerKey-1",
-          "eip712Domain": {
+          "eip712": {
             "domain": {
               "chainId": 4,
               "name": "https://example.com",
               "salt": "0x000000000000000000000000000000000000000000000000aaaabbbbccccdddd",
               "version": "2"
             },
-            "messageSchema": {
+            "types": {
               "CredentialSchema": [
                 {
                   "name": "id",
