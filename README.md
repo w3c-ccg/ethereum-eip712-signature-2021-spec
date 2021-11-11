@@ -69,18 +69,18 @@ credential use-cases.*
 
 
 References:
-- [EIP-191][]
-- [EIP-712][]
-- [eip712-article][]
-- [ld-sigs][]
-- [linked data][]
-- [Metamask][]
-- [metamask-signing][]
-- [Solidity][]
-- [vc-data-model][]
-- [vc-ldp][]
-- [web3][]
-- [zcap-ld][]
+- [Ethereum Improvement Proposals - EIP-191: Signed Data Standard][EIP-191]
+- [Ethereum Improvement Proposals - EIP-712: Ethereum typed structured data hashing and signing][EIP-712]
+- [Metamask Blog - EIP712 is here: What to expect and how to use it][eip712-article]
+- [W3C CCG - Linked Data Proofs - Linked Data Signatures][ld-sigs]
+- [W3C CCG - Linked Data Glossary - Linked Data][linked data]
+- [Wikipedia - MetaMask][Metamask]
+- [MetaMask Docs -  Sign Typed Data v4][metamask-signing]
+- [Wikipedia - Solidity (programming language)][Solidity]
+- [W3C Verifiable Credentials Data Model (VC Data Model)][vc-data-model]
+- [W3C VC Data Model - Linked Data Proofs][vc-ldp]
+- [GitHub - ChainSafe/web3.js - Ethereum JavaScript API][web3]
+- [W3C CCG - Authorization Capabilities for Linked Data (ZCAP-LD)][zcap-ld]
 
 [EIP-191]: https://eips.ethereum.org/EIPS/eip-191
 [EIP-712]: https://eips.ethereum.org/EIPS/eip-712
