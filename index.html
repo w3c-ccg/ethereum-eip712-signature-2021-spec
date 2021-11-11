@@ -314,6 +314,16 @@
         The <code>type</code> of the linked data proof for the signature suite
         <a>EthereumEip712Signature2021</a>.
       </dd>
+
+      <dt><dfn>@context</dfn></dt>
+      <dd>
+        The property of a <a>linked data document</a> used to reference JSON-LD
+        context files. See also the
+        <a href="https://www.w3.org/TR/vc-data-model/#contexts">Contexts</a>
+        section of the VC Data Model, and the definition of
+        <a href="https://www.w3.org/TR/json-ld11/#dfn-context">context</a> in
+        JSON-LD 1.1.
+      </dd>
     </dl>
   </section>
 
@@ -601,6 +611,21 @@
            }
            </pre>
       </section>
+    </section>
+
+    <section>
+      <h2>JSON-LD Context</h2>
+      <p>
+        The <a><code>@context</code></a> property of a JSON-LD document using
+        this signature suite <em>SHOULD</em> include the following URI string:
+        <code>https://w3id.org/security/suites/eip712sig-2021/v1</code>.
+      </p>
+      <p class="issue" data-number="10">
+        This signature suite currently does not specify a mechanism
+        for ensuring the integrity of the RDF data model when using JSON-LD.
+        See the security consideration
+        <a href="#json-ld-expanded-terms-not-signed"></a> for more info.
+      </p>
     </section>
   </section>
 
@@ -995,6 +1020,32 @@
       TODO: We need to add a complete list of security considerations, e.g.,
       what happens if EIP712 JSON schema does not match the message to be signed.
     </div>
+
+    <section id="json-ld-expanded-terms-not-signed">
+      <h3>JSON-LD expanded terms are not signed over.</h3>
+
+      <p>Linked data signatures suites typically use
+        <a href="https://w3c.github.io/json-ld-api/#deserialize-json-ld-to-rdf-algorithm">JSON-LD to RDF Deserialization</a>,
+        <a href="https://json-ld.github.io/rdf-dataset-canonicalization/spec/">RDF Dataset Canonicalization</a>
+        and serialization as <a href="https://www.w3.org/TR/n-quads/">N-Quads</a>,
+        as part of constructing the data to sign.
+        This signature suite differs by instead signing based on the JSON
+        document structure more directly, without conversion to RDF. This is
+        supposed to enable a more human-readable signing input. However, it
+        means that information from the JSON-LD context is not included in the
+        signing input that otherwise would be. If the referenced JSON-LD
+        context files are changed, changing the definition of some terms, it is
+        possible that the proof signature may remain valid but the underlying
+        JSON-LD/RDF data could be different. This could be a security issue.
+      </p>
+      <p>
+        This signature suite specification may in the future recommend some
+        mechanism to ensure the integrity of the RDF data beyond the signature
+        over the compact JSON-LD representation. An issue
+        <a href="https://github.com/w3c-ccg/ethereum-eip712-signature-2021-spec/issues/10">Linked data canonicalization hash (#10)</a>
+        exists to track this.
+      </p>
+    <section>
 
   </section>
 </body>
