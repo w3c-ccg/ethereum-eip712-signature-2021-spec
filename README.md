@@ -67,7 +67,7 @@ credential use-cases.*
 ## Related specifications and References
 
 Examples of usage:
-- Tzprofiles.com - A Svelte-based
+- [Tzprofiles.com](https://tzprofiles.com) - A Svelte-based
   [dApp](https://github.com/spruceid/tzprofiles/tree/5515d3d6e3bbba2b69c260c6ba7959484af797ed/dapp)
   that allows signing a self-issued/self-attested [proof of control from a
   Metamask
