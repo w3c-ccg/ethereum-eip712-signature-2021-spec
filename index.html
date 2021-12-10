@@ -1043,13 +1043,18 @@
         remain valid but the underlying JSON-LD/RDF data could be different.
       </p>
       <p>  
-        This could create security issues if unmitigated. One common method for
-        mitigating this risk is to generate a digest of the document being
-        signed and its proof object as JSON and adding it to the proof object
-        before URDNA canonicalization. This digest then acts as a kind of
-        checksum that can be checked by the verifier. The algorithms for <a
+        In some cases, this could create security issues if unmitigated, because
+        the semantic disambiguation information is not included in the signing
+        method's integrity guarantees. One common method for additionally
+        securing those linked documents is to add an additional, but optional,
+        "semantic integrity" hash to the proof object before URDNA
+        canonicalization. This digest then acts as a kind of checksum that the
+        verifier can use to check the integrity of the expanded context. The
+        algorithms for
+        <a
         href=https://w3c-ccg.github.io/ld-proofs/#create-verify-hash-algorithm>generating</a>
-        this digest (and implicitly, how to verify it) can be found in the <a
+        this digest (and implicitly, the algorithm for how to verify it) can be
+        found in the <a
         href=https://w3c-ccg.github.io/ld-proofs/#create-verify-hash-algorithm>Linked
         Data Proof specification</a>.
       </p>
