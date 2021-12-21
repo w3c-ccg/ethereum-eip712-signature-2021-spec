@@ -85,7 +85,8 @@
         "verificationMethod": {
           "@id": "https://w3id.org/security#verificationMethod",
           "@type": "@id"
-        }
+        },
+        "canonicalizationHash": "https://w3id.org/security/suites/eip712sig-2021#canonicalizationHash"
       }
     }
   }
