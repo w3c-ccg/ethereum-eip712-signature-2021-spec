@@ -323,6 +323,16 @@
         in W3C CCG Security Vocabularity.
       </dd>
 
+      <dt><dfn>JsonWebKey2020</dfn></dt>
+      <dd>
+        A <code>type</code> of the verification method for the signature
+        suite <a
+          href="https://w3c-ccg.github.io/lds-jws2020/">JSON Web Signature 2020</a>.
+        See also <a
+          href="https://w3c-ccg.github.io/security-vocab/#JsonWebKey2020">JsonWebKey2020</a>
+        in W3C CCG Security Vocabularity.
+      </dd>
+
       <dt><dfn>EthereumEip712Signature2021</dfn></dt>
       <dd>
         The <code>type</code> of the linked data proof for the signature suite
@@ -547,10 +557,14 @@
       </p>
 
       <p>
-        This signature suite does not define a new verfication method.
-        <code>EcdsaSecp256k1VerificationKey2019</code> and <code>EcdsaSecp256k1RecoveryMethod2020</code>
-        can be used with Ethereum EIP712 Signature 2021.
+        This signature suite does not define a new verification method type.
+        The following verification method types can be used with Ethereum EIP712 Signature 2021:
       </p>
+      <ul>
+        <li><code><a>EcdsaSecp256k1VerificationKey2019</a></code></li>
+        <li><code><a>EcdsaSecp256k1RecoveryMethod2020</a></code></li>
+        <li><code><a>JsonWebKey2020</a></code></li>
+      </ul>
 
     </section>
 
@@ -571,7 +585,15 @@
         <p>
           The <code>verificationMethod</code> property of the proof SHOULD be a URI. Dereferencing
           the <code>verificationMethod</code> SHOULD result in an object of type
-          <code>EcdsaSecp256k1VerificationKey2019</code> or <code>EcdsaSecp256k1RecoveryMethod2020</code>.
+          <code>EcdsaSecp256k1VerificationKey2019</code>,
+          <code>EcdsaSecp256k1RecoveryMethod2020</code>, or
+          <code>JsonWebKey2020</code>.
+          If the dereferenced verification method object is of type
+          <code>JsonWebKey2020</code>, it MUST contain a property
+          <a href="https://w3id.org/security#publicKeyJwk"><code>publicKeyJwk</code></a>,
+          containing a secp256k1 public key represented as a JSON Web Key (JWK)
+          according to
+          <a href="https://datatracker.ietf.org/doc/html/rfc8812#section-3.1">RFC 8812 Section 3.1</a>.
         </p>
 
         <p>
