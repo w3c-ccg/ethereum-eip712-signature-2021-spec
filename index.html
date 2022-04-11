@@ -126,15 +126,15 @@
           title: "Security Linked Data Vocabulary",
           href: "https://w3id.org/security",
           authors: ["Manu Sporny", "David Longley"],
-          status: "CGDRAFT",
-          publisher: "Web Payments Community Group",
+          status: "Draft Community Group Report",
+          publisher: "Credentials Community Group",
         },
-        "LD-PROOFS": {
-          title: "Linked Data Proofs 1.0",
-          href: "https://w3c-ccg.github.io/ld-proofs",
+        "DATA-INTEGRITY": {
+          title: "Data Integrity",
+          href: "https://w3c-ccg.github.io/data-integrity-spec/",
           authors: ["David Longley", "Manu Sporny"],
-          status: "CGDRAFT",
-          publisher: "Web Payments Community Group",
+          status: "Draft Community Group Report",
+          publisher: "Credentials Community Group",
         },
         ISO_8601: {
           title: "ISO_8601",
@@ -187,8 +187,9 @@
   <section id="abstract">
     <p>
       This specification describes an Ethereum EIP712 Signature Suite created in 2021
-      for the Linked Data Proof specification. The Signature Suite utilizes
-      EIP712 signatures.
+      for use with <a data-cite="VC-DATA-MODEL#dfn-verifiable-credentials">Verifiable Credentials</a> and
+      <a data-cite="DATA-INTEGRITY#proofs">data integrity proofs</a>. This signature suite utilizes
+      [[EIP712]] signatures.
     </p>
   </section>
 
@@ -204,8 +205,8 @@
     <p>
       This specification defines a cryptographic suite for the purpose of
       creating, verifying proofs for EIP712 signatures in conformance with the
-      Ethereum Improvement Proposal #712 [[EIP712]] as well as the Linked Data
-      Proofs [[LD-PROOFS]] specification.
+      Ethereum Improvement Proposal #712 [[EIP712]] as well as the Data
+      Integrity [[DATA-INTEGRITY]] specification.
     </p>
     <p>
       In general the suites implicitly follows the JCS Algorithm [[JCS]] in the
@@ -235,7 +236,8 @@
 
     <p>
       Since the EIP712 signature function relies
-      on JSON schemas, implementers need to ensure that the linked data document matches the
+      on JSON schemas, implementers need to ensure that the
+      <a data-cite="DATA-INTEGRITY#dfn-unsigned-data-document">unsigned data document</a> matches the
       EIP712 JSON schema that will be provided to the EIP712 signature function.
     </p>
 
@@ -294,15 +296,6 @@
         message has not been modified in transit and came from someone
         possessing a particular secret.
       </dd>
-      <dt>
-        <dfn data-lt="linked data document|linked data documents">linked data document</dfn>
-      </dt>
-      <dd>A document comprised of linked data.</dd>
-      <dt>
-        <dfn data-lt="linked data proof|linked data proofs">linked data proof</dfn>
-      </dt>
-      <dd>An object or mechanism for proving integrity of <a>linked data
-          documents</a>, in the form specified by [[LD-PROOFS]].</dd>
 
       <dt><dfn>EcdsaSecp256k1VerificationKey2019</dfn></dt>
       <dd>
@@ -335,13 +328,13 @@
 
       <dt><dfn>EthereumEip712Signature2021</dfn></dt>
       <dd>
-        The <code>type</code> of the linked data proof for the signature suite
-        <a>EthereumEip712Signature2021</a>.
+        The <code>type</code> of the <a data-cite="DATA-INTEGRITY#dfn-data-integrity-proof">data integrity proof</a>
+        for the signature suite <a>EthereumEip712Signature2021</a>.
       </dd>
 
       <dt><dfn>@context</dfn></dt>
       <dd>
-        The property of a <a>linked data document</a> used to reference JSON-LD
+        The property of a <a data-cite="DATA-INTEGRITY#dfn-signed-data-document">signed data document</a> used to reference JSON-LD
         context files. See also the
         <a href="https://www.w3.org/TR/vc-data-model/#contexts">Contexts</a>
         section of the VC Data Model, and the definition of
@@ -356,8 +349,8 @@
 
     <p>
       The Ethereum EIP 712 <a>signature suite</a> 2021 MUST be used in conjunction with
-      the signing and verification algorithms in the Linked Data Proofs
-      [[LD-PROOFS]] specification. The suite consists of the following
+      the signing and verification algorithms in the Data Integrity
+      [[DATA-INTEGRITY]] specification. The suite consists of the following
       algorithms:
     </p>
 
@@ -407,13 +400,19 @@
         specification. Remaining entries MUST be the JSON schemas of the message to be
         signed in the EIP712 format. <code>types</code> MUST contain a property <code>proof</code> of type
         <code>Proof</code>
-        which contains the JSON schema for all properties of the final linked data signature <code>proof</code> property
+        which contains the JSON schema for all properties of the final
+        <a data-cite="DATA-INTEGRITY#dfn-data-integrity-proof">data integrity proof</a>
+        <code>proof</code> property
         that need to be signed.
       </li>
       <li>
-        <code>message</code> MUST be the linked data object that contains the message to be signed. The message MUST
+        <code>message</code> MUST be the
+        <a data-cite="DATA-INTEGRITY#dfn-unsigned-data-document">unsigned data document</a>
+        that contains the message to be signed. The message MUST
         contain a <code>proof</code> property with values set to the values of
-        the properties in the resulting linked data signature <code>proof</code> property that are expected to be
+        the properties in the resulting
+        data-cite="DATA-INTEGRITY#dfn-signed-data-document">signed data document</a>'s
+        <code>proof</code> property that are expected to be
         signed.
       </li>
       <li>
@@ -552,7 +551,7 @@
     <section>
       <h2>Verification Method</h2>
       <p>
-        The cryptographic material used to verify a linked data proof is
+        The cryptographic material used to verify a <a data-cite="DATA-INTEGRITY#dfn-data-integrity-proof">data integrity proof</a> is
         called the verification method.
       </p>
 
@@ -571,7 +570,7 @@
     <section>
       <h2>Proof Representation</h2>
       <p>
-        The cryptographic material used to represent a linked data proof is
+        The cryptographic material used to represent a <a data-cite="DATA-INTEGRITY#dfn-data-integrity-proof">data integrity proof</a> is
         called the proof type.
       </p>
 
@@ -741,7 +740,7 @@
       <section>
         <h3 id="ld-canonicalization-hash-algorithm">Linked Data Canonicalization Hash Algorithm</h3>
         <p>
-          Given an input <a>linked data document</a> <em>document</em> which includes a
+          Given an input <a data-cite="DATA-INTEGRITY#dfn-unsigned-data-document">unsigned data document</a> <em>document</em> which includes a
           <code>proof</code> property with object value <em>proof</em>,
           the value for <code>canonicalizationHash</code> is computed as
           follows:
@@ -1338,7 +1337,7 @@
         In some cases, this could create security issues if unmitigated, because
         the semantic disambiguation information is not included in the signing
         method's integrity guarantees. One common method for additionally
-        securing those linked documents is to add an additional, but optional,
+        securing those linked data documents is to add an additional, but optional,
         "semantic integrity" hash to the proof object before URDNA
         canonicalization. This digest then acts as a kind of checksum that the
         verifier can use to check the integrity of the expanded context. The
@@ -1359,7 +1358,8 @@
         While it is not expected that EIP-712 signers will be able to natively
         understand this canonicalization hash, signers and verifiers of this
         proof suite using JSON-LD processing can use it to ensure the integrity
-        of the signed document as a linked data document. When using this signature
+        of the <a data-cite="DATA-INTEGRITY#dfn-signed-data-document">signed data document</a>
+        as a linked data document. When using this signature
         suite with JSON-LD documents, <a href="#canonicalizationHash"></a> SHOULD be used.
       </p>
     </section>
