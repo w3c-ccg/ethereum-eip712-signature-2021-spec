@@ -66,6 +66,14 @@ credential use-cases.*
 
 ## Related specifications and References
 
+Examples of usage:
+- [Tzprofiles.com](https://tzprofiles.com) - A Svelte-based
+  [dApp](https://github.com/spruceid/tzprofiles/tree/5515d3d6e3bbba2b69c260c6ba7959484af797ed/dapp)
+  that allows signing a self-issued/self-attested [proof of control from a
+  Metamask
+  wallet](https://github.com/spruceid/tzprofiles/blob/5515d3d6e3bbba2b69c260c6ba7959484af797ed/dapp/src/routes/Ethereum.svelte#L116-L148)
+  using EIP712 signing (slightly out of date with PR#32)
+  - <details><summary>Screengrab here</summary><img alt="screengrab of eip712 signing" src=https://user-images.githubusercontent.com/37127325/141311612-eb02344a-122f-4033-9b82-3fa51fc3a025.png></details>
 
 
 References:
